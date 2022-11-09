@@ -21,7 +21,7 @@ jobs:
       - name: Prepare environment for Go
         uses: actions/setup-go@v3
         with:
-          go-version: ">=1.18.0"
+          go-version: "1.18"
       - name: Run unit test
         run: go test -cover -v ./...
   build_push:

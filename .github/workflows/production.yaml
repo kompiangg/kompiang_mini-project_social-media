@@ -21,7 +21,7 @@ jobs:
       - name: Prepare environment for Go
         uses: actions/setup-go@v3
         with:
-          go-version: ">=1.18.0"
+          go-version: "1.18"
       - name: Run unit test
         run: go test -cover -v ./...
   build_push:
@@ -50,7 +50,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_PRODUCTION_SERVER }}
           username: ${{ secrets.SSH_PRODUCTION_USERNAME }}
-          password: ${{ secrets.SSH_PRODUCTION_PASSWORD }}
+          key: ${{ secrets.SSH_PRODUCTION_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PRODUCTION_PORT }}
           script: |
             cd mini-project-alterra/prod
