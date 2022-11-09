@@ -28,9 +28,10 @@ func (s handlerSuite) TestRegister() {
 		{
 			name: "Valid",
 			request: dto.UserRegisterRequest{
-				Username: "test",
-				Email:    "test@gmail.com",
-				Password: "12345678",
+				Username:    "test",
+				Email:       "test@gmail.com",
+				Password:    "12345678",
+				DisplayName: "test",
 			},
 			expectedCode: 201,
 			expectedResponse: dto.BaseResponse{
@@ -45,9 +46,10 @@ func (s handlerSuite) TestRegister() {
 		{
 			name: "Invalid Content Type",
 			request: dto.UserRegisterRequest{
-				Username: "test",
-				Email:    "test@gmail.com",
-				Password: "12345678",
+				Username:    "test",
+				Email:       "test@gmail.com",
+				Password:    "12345678",
+				DisplayName: "test",
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResponse: dto.BaseResponse{
@@ -65,14 +67,15 @@ func (s handlerSuite) TestRegister() {
 		{
 			name: "Invalid Empty Field",
 			request: dto.UserRegisterRequest{
-				Username: "",
-				Email:    "test@gmail.com",
-				Password: "12345678",
+				Username:    "",
+				Email:       "test@gmail.com",
+				Password:    "12345678",
+				DisplayName: "test",
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResponse: dto.BaseResponse{
 				Error: &dto.ErrorBaseResponse{
-					Message: "Content type must be application/json",
+					Message: errors.ErrBadRequest.Error(),
 					Detail:  []string{"Username cant be empty"},
 				},
 				Data: nil,
@@ -85,9 +88,10 @@ func (s handlerSuite) TestRegister() {
 		{
 			name: "Invalid Empty Field",
 			request: dto.UserRegisterRequest{
-				Username: "",
-				Email:    "",
-				Password: "12345678",
+				Username:    "",
+				Email:       "",
+				Password:    "12345678",
+				DisplayName: "test",
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResponse: dto.BaseResponse{
@@ -108,9 +112,10 @@ func (s handlerSuite) TestRegister() {
 		{
 			name: "Invalid Empty Field",
 			request: dto.UserRegisterRequest{
-				Username: "",
-				Email:    "",
-				Password: "",
+				Username:    "",
+				Email:       "",
+				Password:    "",
+				DisplayName: "test",
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResponse: dto.BaseResponse{
@@ -130,11 +135,38 @@ func (s handlerSuite) TestRegister() {
 			contentType: echo.MIMEApplicationJSON,
 		},
 		{
+			name: "Invalid Empty Field",
+			request: dto.UserRegisterRequest{
+				Username:    "",
+				Email:       "",
+				Password:    "",
+				DisplayName: "",
+			},
+			expectedCode: http.StatusBadRequest,
+			expectedResponse: dto.BaseResponse{
+				Error: &dto.ErrorBaseResponse{
+					Message: errors.ErrBadRequest.Error(),
+					Detail: []string{
+						"Username cant be empty",
+						"Email cant be empty",
+						"Password cant be empty",
+						"Display name cant be empty",
+					},
+				},
+				Data: nil,
+			},
+			service: func(ctx context.Context, req *dto.UserRegisterRequest) error {
+				return nil
+			},
+			contentType: echo.MIMEApplicationJSON,
+		},
+		{
 			name: "Service Return Error",
 			request: dto.UserRegisterRequest{
-				Username: "test",
-				Email:    "test@gmail.com",
-				Password: "12345678",
+				Username:    "test",
+				Email:       "test@gmail.com",
+				Password:    "12345678",
+				DisplayName: "test",
 			},
 			expectedCode: http.StatusInternalServerError,
 			expectedResponse: dto.BaseResponse{

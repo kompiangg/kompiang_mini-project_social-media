@@ -91,7 +91,7 @@ func (s handlerSuite) TestRefreshToken() {
 			},
 			expectedResponse: dto.BaseResponse{
 				Error: &dto.ErrorBaseResponse{
-					Message: "Refresh Token field couldn't be empty",
+					Message: errors.ErrInternalServer.Error(),
 				},
 				Data: nil,
 			},
