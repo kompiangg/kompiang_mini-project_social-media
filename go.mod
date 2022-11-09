@@ -7,6 +7,8 @@ require (
 	github.com/labstack/echo/v4 v4.9.1
 )
 
+require github.com/gorilla/websocket v1.5.0 // indirect
+
 require (
 	github.com/cloudinary/cloudinary-go/v2 v2.2.0 // direct
 	github.com/creasty/defaults v1.6.0 // indirect

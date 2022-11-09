@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/kompiang_mini-project_social-media/internal/service"
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
@@ -74,6 +75,7 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 				})
 			}
 		}
+		defer os.Remove(*imageFilename)
 
 		var videoFileName *string
 		if video != nil {
@@ -84,6 +86,7 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 				})
 			}
 		}
+		defer os.Remove(*videoFileName)
 
 		userCtx := authutils.UserFromRequestContext(c)
 		if userCtx == nil {

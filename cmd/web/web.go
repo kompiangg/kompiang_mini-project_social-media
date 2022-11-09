@@ -7,6 +7,7 @@ import (
 	"github.com/kompiang_mini-project_social-media/config"
 	repositorypkg "github.com/kompiang_mini-project_social-media/internal/repository/impl"
 	servicepkg "github.com/kompiang_mini-project_social-media/internal/service/impl"
+	"github.com/kompiang_mini-project_social-media/pkg/utils/websocketutils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -31,6 +32,11 @@ func StartWebService(params WebServiceParams) {
 
 	e := echo.New()
 
+	websocketPool := websocketutils.NewPool()
+	go func() {
+		websocketPool.Start()
+	}()
+
 	repository := repositorypkg.NewRepository(repositorypkg.RepositoryParams{
 		DB: db,
 	})
@@ -45,6 +51,7 @@ func StartWebService(params WebServiceParams) {
 		E:       e,
 		Service: service,
 		Config:  params.Config,
+		Pool:    websocketPool,
 	})
 
 	err = config.StartServer(config.Server{

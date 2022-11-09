@@ -2,6 +2,7 @@ package handler
 
 import (
 	"log"
+	"os"
 
 	"github.com/kompiang_mini-project_social-media/internal/service"
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
@@ -82,6 +83,7 @@ func EditProfile(service service.Service) echo.HandlerFunc {
 				})
 			}
 		}
+		defer os.Remove(*profilePictureFileName)
 
 		res, err := service.EditUserService(c.Request().Context(), userCtx, &req, profilePictureFileName)
 		if err != nil {

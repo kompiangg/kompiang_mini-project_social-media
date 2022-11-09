@@ -6,6 +6,7 @@ import (
 	"github.com/kompiang_mini-project_social-media/config"
 	"github.com/kompiang_mini-project_social-media/internal/service"
 	"github.com/kompiang_mini-project_social-media/pkg/middleware"
+	"github.com/kompiang_mini-project_social-media/pkg/utils/websocketutils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,6 +14,7 @@ type RouteParams struct {
 	E       *echo.Echo
 	Service service.Service
 	Config  *config.Config
+	Pool    *websocketutils.Pool
 }
 
 func InitRoute(params RouteParams) {
@@ -43,4 +45,6 @@ func InitRoute(params RouteParams) {
 	params.E.GET(path.GetFollowers, handler.GetFollowers(params.Service), middleware.MustAuthorized(&params.Config.JWTConfig))
 	params.E.GET(path.GetFollowings, handler.GetFollowing(params.Service), middleware.MustAuthorized(&params.Config.JWTConfig))
 	params.E.POST(path.FollowOtherUser, handler.FollowOtherUser(params.Service), middleware.MustAuthorized(&params.Config.JWTConfig))
+
+	params.E.GET(path.WebSocket, handler.WebSocket(params.Pool), middleware.MustAuthorized(&params.Config.JWTConfig))
 }

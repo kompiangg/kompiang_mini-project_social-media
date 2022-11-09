@@ -27,4 +27,6 @@ const (
 	GetFollowers    = "/api/v1/followers/:username"
 	GetFollowings   = "/api/v1/followings/:username"
 	FollowOtherUser = "/api/v1/follow"
+	// WebSocket
+	WebSocket = "/ws"
 )

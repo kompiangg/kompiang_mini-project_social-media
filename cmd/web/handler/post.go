@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/kompiang_mini-project_social-media/internal/service"
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
@@ -22,8 +23,8 @@ func CreatePost(service service.Service) echo.HandlerFunc {
 		// 		Detail: []string{"Content type must be application/json"},
 		// 	})
 		// }
-		userCtx := authutils.UserFromRequestContext(c)
 
+		userCtx := authutils.UserFromRequestContext(c)
 		if userCtx == nil {
 			log.Println("[HANDLER ERROR] Couldn't extract user account from context")
 			return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
@@ -77,6 +78,7 @@ func CreatePost(service service.Service) echo.HandlerFunc {
 				})
 			}
 		}
+		defer os.Remove(*imageFilename)
 
 		var videoFileName *string
 		if video != nil {
@@ -87,6 +89,7 @@ func CreatePost(service service.Service) echo.HandlerFunc {
 				})
 			}
 		}
+		defer os.Remove(*videoFileName)
 
 		post, err := service.CreatePost(c.Request().Context(), &req, userCtx.Username, imageFilename, videoFileName)
 		if err != nil {
