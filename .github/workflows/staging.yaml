@@ -51,7 +51,7 @@ jobs:
           key: ${{ secrets.SSH_STAGING_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PRODUCTION_PORT }}
           script: |
-            cd cd mini-project-alterra/dev
+            cd mini-project-alterra/dev
             docker compose rm -sf ${{ env.DOCKER_SERVICE_NAME }}
             docker rmi ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_REPOSITORY_NAME }}:${{ env.DOCKER_IMAGE_TAG_NAME }}-latest
             docker compose up -d ${{ env.DOCKER_SERVICE_NAME }}
