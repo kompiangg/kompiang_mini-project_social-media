@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"log"
 	"os"
 	"os/signal"
@@ -21,6 +22,9 @@ func StartServer(param Server) error {
 		if err := param.E.Start(param.Port); err != nil {
 			errChan <- err
 		}
+	}()
+	defer func() {
+		param.E.Shutdown(context.Background())
 	}()
 
 	signalChan := make(chan os.Signal, 1)
