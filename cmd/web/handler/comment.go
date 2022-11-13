@@ -15,6 +15,14 @@ import (
 
 func CreateComment(service service.Service) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		userCtx := authutils.UserFromRequestContext(c)
+		if userCtx == nil {
+			log.Println("[HANDLER ERROR] Couldn't extract user account from context")
+			return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
+				Err: errors.ErrInternalServer,
+			})
+		}
+
 		postID := c.FormValue("post_id")
 		recommentID := c.FormValue("recomment_id")
 		if postID == "" && recommentID == "" {
@@ -42,7 +50,7 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 		image, err := c.FormFile("image")
 		if image != nil {
 			if err != nil {
-				log.Println("[HANDLER ERROR] Couldn't extract user account from context")
+				log.Println("[HANDLER ERROR] while get image form file")
 				return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
 					Err: err,
 				})
@@ -52,7 +60,7 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 		video, err := c.FormFile("video")
 		if video != nil {
 			if err != nil {
-				log.Println("[HANDLER ERROR] Couldn't extract user account from context")
+				log.Println("[HANDLER ERROR] while get video form file")
 				return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
 					Err: err,
 				})
@@ -74,8 +82,8 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 					Err: errors.ErrInternalServer,
 				})
 			}
+			defer os.Remove(*imageFilename)
 		}
-		defer os.Remove(*imageFilename)
 
 		var videoFileName *string
 		if video != nil {
@@ -85,15 +93,7 @@ func CreateComment(service service.Service) echo.HandlerFunc {
 					Err: errors.ErrInternalServer,
 				})
 			}
-		}
-		defer os.Remove(*videoFileName)
-
-		userCtx := authutils.UserFromRequestContext(c)
-		if userCtx == nil {
-			log.Println("[HANDLER ERROR] Couldn't extract user account from context")
-			return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
-				Err: err,
-			})
+			defer os.Remove(*videoFileName)
 		}
 
 		comment, err := service.CreateComment(c.Request().Context(), &req, userCtx.Username, imageFilename, videoFileName)

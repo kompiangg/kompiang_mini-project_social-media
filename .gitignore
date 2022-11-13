@@ -100,4 +100,4 @@ $RECYCLE.BIN/
 
 .env
 tmp/*
-uploads/*
+**/uploads/**

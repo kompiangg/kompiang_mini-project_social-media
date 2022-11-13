@@ -15,15 +15,6 @@ import (
 
 func CreatePost(service service.Service) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// var req dto.CreatePostRequest
-		// err := c.Bind(&req)
-		// if err != nil {
-		// 	return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
-		// 		Err:    errors.ErrBadRequest,
-		// 		Detail: []string{"Content type must be application/json"},
-		// 	})
-		// }
-
 		userCtx := authutils.UserFromRequestContext(c)
 		if userCtx == nil {
 			log.Println("[HANDLER ERROR] Couldn't extract user account from context")
@@ -77,8 +68,8 @@ func CreatePost(service service.Service) echo.HandlerFunc {
 					Err: errors.ErrInternalServer,
 				})
 			}
+			defer os.Remove(*imageFilename)
 		}
-		defer os.Remove(*imageFilename)
 
 		var videoFileName *string
 		if video != nil {
@@ -88,8 +79,8 @@ func CreatePost(service service.Service) echo.HandlerFunc {
 					Err: errors.ErrInternalServer,
 				})
 			}
+			defer os.Remove(*videoFileName)
 		}
-		defer os.Remove(*videoFileName)
 
 		post, err := service.CreatePost(c.Request().Context(), &req, userCtx.Username, imageFilename, videoFileName)
 		if err != nil {
@@ -148,12 +139,6 @@ func DeletePost(service service.Service) echo.HandlerFunc {
 func GetPostById(service service.Service) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
-		if id == "" {
-			return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
-				Err:    errors.ErrBadRequest,
-				Detail: []string{"ID parameter need to be field"},
-			})
-		}
 
 		post, err := service.GetPostByID(c.Request().Context(), id)
 		if err != nil {

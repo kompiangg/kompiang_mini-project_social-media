@@ -40,16 +40,8 @@ func EditProfile(service service.Service) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var req dto.EditProfileRequest
 		var err error
-		// err := c.Bind(&req)
-		// if err != nil {
-		// 	return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
-		// 		Err:    errors.ErrBadRequest,
-		// 		Detail: "Content type must be application/json",
-		// 	})
-		// }
 
 		userCtx := authutils.UserFromRequestContext(c)
-
 		if userCtx == nil {
 			log.Println("[HANDLER ERROR] Couldn't extract user account from context")
 			return httputils.WriteErrorResponse(c, httputils.ErrorResponseParams{
@@ -82,8 +74,8 @@ func EditProfile(service service.Service) echo.HandlerFunc {
 					Err: errors.ErrInternalServer,
 				})
 			}
+			defer os.Remove(*profilePictureFileName)
 		}
-		defer os.Remove(*profilePictureFileName)
 
 		res, err := service.EditUserService(c.Request().Context(), userCtx, &req, profilePictureFileName)
 		if err != nil {

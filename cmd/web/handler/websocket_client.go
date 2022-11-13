@@ -31,7 +31,7 @@ func WebSocket(pool *websocketutils.Pool) echo.HandlerFunc {
 		wsConn, err := upgrade.Upgrade(c.Response(), c.Request(), nil)
 		if err != nil {
 			log.Println(err.Error())
-			return err
+			return nil
 		}
 
 		client := &websocketutils.Client{
