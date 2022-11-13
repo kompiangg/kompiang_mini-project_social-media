@@ -1,32 +1,55 @@
 package path
 
+import "github.com/labstack/echo/v4"
+
 const (
-	Ping = "/api/v1/ping"
+	apiV1GroupPath = "/api/v1"
+
+	pingRootGroupPath = "/ping"
 	// Auth
-	Register     = "/api/v1/auth/register"
-	Login        = "/api/v1/auth/login"
-	RefreshToken = "/api/v1/auth/refresh"
+	authRootGroupPath = "/auth"
 	// User Profile
-	DeactivateUser       = "/api/v1/user/deactivate"
-	GetProfileByUsername = "/api/v1/user/:username"
-	EditProfile          = "/api/v1/user"
-	GetPostByUsername    = "/api/v1/user/:username/post"
+	userRootGroupPath = "/user"
 	// Post
-	CreatePost  = "/api/v1/post"
-	DeletePost  = "/api/v1/post"
-	GetPostByID = "/api/v1/post/:id"
+	postRootGroupPath = "/post"
 	// Comment
-	CreateComment             = "/api/v1/comment"
-	GetChildCommentByParentID = "/api/v1/comment/:parent_comment_id"
+	commentRootGroupPath = "/comment"
 	// Timeline
-	Timeline = "/api/v1/timeline"
+	timelineRootGroupPath = "/timeline"
 	// Notifications
-	CreateGeneralNotifications = "/api/v1/notifications"
-	GetNotifications           = "/api/v1/notifications"
+	notificationRootGroupPath = "/notification"
 	// User Relation
-	GetFollowers    = "/api/v1/followers/:username"
-	GetFollowings   = "/api/v1/followings/:username"
-	FollowOtherUser = "/api/v1/follow"
+	userRelationRootGroupPath = ""
 	// WebSocket
-	WebSocket = "/ws"
+	WebSocketGroupRootGroupPath = "/ws"
 )
+
+type PathGroups struct {
+	ApiGroupV1          *echo.Group
+	PingGroupV1         *echo.Group
+	AuthGroupV1         *echo.Group
+	UserProfileGroupV1  *echo.Group
+	PostGroupV1         *echo.Group
+	CommentGroupV1      *echo.Group
+	TimelineGroupV1     *echo.Group
+	NotificationGroupV1 *echo.Group
+	UserRelationGroupV1 *echo.Group
+	WebSocketGroup      *echo.Group
+}
+
+func InitPathGroups(e *echo.Echo) *PathGroups {
+	pathGroups := PathGroups{}
+
+	pathGroups.ApiGroupV1 = e.Group(apiV1GroupPath)
+	pathGroups.PingGroupV1 = pathGroups.ApiGroupV1.Group(pingRootGroupPath)
+	pathGroups.AuthGroupV1 = pathGroups.ApiGroupV1.Group(authRootGroupPath)
+	pathGroups.UserProfileGroupV1 = pathGroups.ApiGroupV1.Group(userRootGroupPath)
+	pathGroups.PostGroupV1 = pathGroups.ApiGroupV1.Group(postRootGroupPath)
+	pathGroups.CommentGroupV1 = pathGroups.ApiGroupV1.Group(commentRootGroupPath)
+	pathGroups.TimelineGroupV1 = pathGroups.ApiGroupV1.Group(timelineRootGroupPath)
+	pathGroups.NotificationGroupV1 = pathGroups.ApiGroupV1.Group(notificationRootGroupPath)
+	pathGroups.UserRelationGroupV1 = pathGroups.ApiGroupV1.Group(userRelationRootGroupPath)
+	pathGroups.WebSocketGroup = pathGroups.ApiGroupV1.Group(WebSocketGroupRootGroupPath)
+
+	return &pathGroups
+}

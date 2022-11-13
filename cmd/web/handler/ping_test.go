@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/kompiang_mini-project_social-media/cmd/web/path"
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
 	"github.com/stretchr/testify/assert"
 )
@@ -26,7 +25,7 @@ func (s handlerSuite) TestPing() {
 	expectedCode := 200
 
 	res := httptest.NewRecorder()
-	req := httptest.NewRequest(http.MethodGet, path.Ping, nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/ping", nil)
 
 	ctx := s.E.NewContext(req, res)
 

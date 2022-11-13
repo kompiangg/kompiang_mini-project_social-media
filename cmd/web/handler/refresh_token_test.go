@@ -9,7 +9,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kompiang_mini-project_social-media/cmd/web/path"
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
 	"github.com/kompiang_mini-project_social-media/pkg/errors"
 	"github.com/labstack/echo/v4"
@@ -115,7 +114,7 @@ func (s handlerSuite) TestRefreshToken() {
 		}
 
 		res := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPost, path.Register, strings.NewReader(string(request)))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/refresh", strings.NewReader(string(request)))
 		req.Header.Add(echo.HeaderContentType, test.contentType)
 
 		ctx := s.E.NewContext(req, res)

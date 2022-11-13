@@ -2,20 +2,41 @@ package handler
 
 import (
 	"context"
+	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/kompiang_mini-project_social-media/pkg/dto"
+	"github.com/kompiang_mini-project_social-media/pkg/utils/websocketutils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/suite"
 )
 
 type handlerSuite struct {
 	suite.Suite
-	E *echo.Echo
+	E                 *echo.Echo
+	Pool              *websocketutils.Pool
+	UserContext       *dto.UserContext
+	ImageAbsolutePath string
+	VideoAbsolutePath string
 }
 
 func (s *handlerSuite) SetupSuite() {
 	s.E = echo.New()
+	s.UserContext = &dto.UserContext{
+		Username:    "userTest",
+		Email:       "userTest",
+		DisplayName: "userTest",
+	}
+	var err error
+	s.ImageAbsolutePath, err = filepath.Abs(path.Join("..", "..", "..", "pkg", "utils", "testutils", "test.png"))
+	if err != nil {
+		panic(err)
+	}
+	s.VideoAbsolutePath, err = filepath.Abs(path.Join("..", "..", "..", "pkg", "utils", "testutils", "test.mp4"))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestHandlerSuite(t *testing.T) {

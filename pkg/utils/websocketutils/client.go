@@ -43,3 +43,8 @@ func (c *Client) Read() {
 		c.Pool.Message <- &message
 	}
 }
+
+func (c *Client) Close() {
+	c.Pool.Unregister <- c
+	c.Conn.Close()
+}

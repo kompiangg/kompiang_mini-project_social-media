@@ -3,6 +3,9 @@ package websocketutils
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 type Pool struct {
@@ -22,8 +25,14 @@ func NewPool() *Pool {
 }
 
 func (pool *Pool) Start() {
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
 	for {
 		select {
+		case <-signalChan:
+			pool.Close()
+			return
 		case client := <-pool.Register:
 			pool.Clients[client] = true
 			for poolClient := range pool.Clients {
@@ -54,4 +63,14 @@ func (pool *Pool) Start() {
 			}
 		}
 	}
+}
+
+func (pool *Pool) Close() {
+	for client := range pool.Clients {
+		client.Close()
+	}
+	close(pool.Message)
+	close(pool.Unregister)
+	close(pool.Register)
+	log.Println("[INFO] WebSocket connection closed gracefully")
 }
